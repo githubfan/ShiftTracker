@@ -13,3 +13,5 @@ instance/
 
 # Environment Variables
 .env
+
+project_context.md
