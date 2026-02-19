@@ -1,0 +1,139 @@
+/* Base styles */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Instrument Sans', sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 48px;
+}
+
+/* Expands to fill most of the viewport width */
+.auth-container {
+    width: 90vw;
+    max-width: 1400px;
+}
+
+/* Page heading matches wireframe bold style */
+h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+/* Two equal columns sitting side by side */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 48px;
+    margin-bottom: 24px;
+}
+
+/* Each column stacks its fields vertically */
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Each label and input stacked vertically */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+/* Asterisk sits inline with the label text */
+.form-group label {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Light grey rounded inputs matching wireframe */
+.form-group input {
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    width: 100%;
+}
+
+.form-group input::placeholder {
+    color: #999999;
+}
+
+.form-group input:focus {
+    outline: 2px solid #000000;
+}
+
+/* Red asterisk for required fields */
+.required {
+    color: red;
+}
+
+/* Validation error messages */
+.field-error {
+    font-size: 12px;
+    color: red;
+}
+
+/* Flash messages */
+.flash-message {
+    font-size: 14px;
+    color: red;
+    margin-bottom: 16px;
+}
+
+/* Submit button — bottom right, matches wireframe */
+.form-submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.form-submit input[type="submit"] {
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.form-submit input[type="submit"]:hover {
+    background-color: #d0d0d0;
+}
+
+.form-column .form-group {
+    margin-bottom: 0;
+}
+
+/* On smaller screens, stack the two columns into one */
+@media (max-width: 768px) {
+    body {
+        padding: 24px;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-container {
+        width: 100%;
+    }
+}

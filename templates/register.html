@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Shift Tracker</title>
+    <!-- Loads Instrument Sans from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="auth-container">
+
+        <h1>Register</h1>
+
+        <!-- Flash messages from the route logic -->
+        {% for message in get_flashed_messages() %}
+            <p class="flash-message">{{ message }}</p>
+        {% endfor %}
+
+        <form method="POST">
+            <!-- CSRF token for security -->
+            {{ form.hidden_tag() }}
+
+            <div class="form-grid">
+
+                <!-- Left column  -->
+                <div class="form-column">
+
+                    <div class="form-group">
+                        <label>Email Address <span class="required">*</span></label>
+                        {{ form.email(placeholder='yourname@example.com') }}
+                        {% for error in form.email.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>First Name <span class="required">*</span></label>
+                        {{ form.first_name(placeholder='John') }}
+                        {% for error in form.first_name.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name <span class="required">*</span></label>
+                        {{ form.last_name(placeholder='Smith') }}
+                        {% for error in form.last_name.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <!-- Right column -->
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>Password <span class="required">*</span></label>
+                        {{ form.password(placeholder='Minimum 8 characters') }}
+                        {% for error in form.password.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm Password <span class="required">*</span></label>
+                        {{ form.confirm_password(placeholder='Re-enter your password') }}
+                        {% for error in form.confirm_password.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Max Hours</label>
+                        {{ form.max_hours(placeholder='40') }}
+                        {% for error in form.max_hours.errors %}
+                            <span class="field-error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-submit">
+                {{ form.submit() }}
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>
