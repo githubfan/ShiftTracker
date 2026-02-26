@@ -92,7 +92,7 @@ h1 {
     margin-bottom: 16px;
 }
 
-/* Submit button — bottom right, matches wireframe */
+/* Submit button - bottom right, matches wireframe */
 .form-submit {
     display: flex;
     justify-content: flex-end;
@@ -136,4 +136,487 @@ h1 {
     .auth-container {
         width: 100%;
     }
+}
+
+/* ---------------------------------------------------------------
+   MANAGER PAGES
+--------------------------------------------------------------- */
+
+/* Wraps all manager page content with consistent padding and max width */
+.page-container {
+    width: 90vw;
+    max-width: 1400px;
+}
+
+/* Top navigation bar shared across all manager pages */
+.manager-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    font-size: 14px;
+}
+
+/* Nav links default to black with no underline */
+.manager-nav a {
+    text-decoration: none;
+    color: #000000;
+    font-weight: 500;
+}
+
+/* Active page link is bold so the manager knows where they are */
+.manager-nav a.active {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.manager-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Separator between nav links */
+.manager-nav span {
+    color: #999999;
+}
+
+/* Week navigation - Last Week / This Week / Next Week */
+.week-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 40px;
+}
+
+/* Current week heading */
+.week-nav h2 {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* Last Week / Next Week links */
+.week-nav-side {
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 400;
+    color: #000000;
+    text-decoration: none;
+}
+
+.week-nav-side:hover {
+    text-decoration: underline;
+}
+
+/* Individual shift card */
+.shift-card {
+    background-color: #e8e8e8;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+/* Top row of the card - shift info on the left, edit icon on the right */
+.shift-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+/* Date and times on the left side of the card */
+.shift-card-info h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.shift-card-info p {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.shift-description {
+    color: #555555;
+    font-style: italic;
+}
+
+/* Edit pencil icon in the top right of the card */
+.edit-icon {
+    font-size: 18px;
+    text-decoration: none;
+    color: #000000;
+    cursor: pointer;
+}
+
+/* Label above the employee tags */
+.assigned-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* Wraps all employee tags in a flex row that wraps onto new lines */
+.employee-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Individual employee pill tag */
+.employee-tag {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Shown when no shifts exist for the selected week */
+.no-shifts {
+    font-size: 16px;
+    color: #999999;
+    margin-bottom: 32px;
+}
+
+/* Add New Shift button */
+.btn-primary {
+    display: inline-block;
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #000000;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #d0d0d0;
+}
+
+/* Flash message success variant */
+.flash-message.success {
+    color: green;
+}
+
+/* Flash message error variant */
+.flash-message.error {
+    color: red;
+}
+
+/* ---------------------------------------------------------------
+   MANAGER PAGES - RESPONSIVE
+--------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .week-nav {
+        gap: 24px;
+    }
+
+    .week-nav h2 {
+        font-size: 18px;
+    }
+
+    .shift-card-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .page-container {
+        width: 100%;
+    }
+}
+
+/* ---------------------------------------------------------------
+   CREATE SHIFT FORM
+--------------------------------------------------------------- */
+
+/* Date, Start Time and End Time sit in a single row */
+.shift-form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Description textarea spans full width */
+textarea {
+    width: 100%;
+    background-color: #e8e8e8;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+textarea:focus {
+    outline: 2px solid #000000;
+}
+
+/* Staff checklist - removes default list styling */
+.staff-checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+}
+
+/* Each checkbox row */
+.staff-checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+/* Prevent the checkbox input from stretching */
+.staff-checklist input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+/* Cancel and Create Shift buttons sit side by side on the right */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+/* Secondary button style for Cancel */
+.btn-secondary {
+    display: inline-block;
+    background-color: #e8e8e8;
+    border: none;
+    margin-top: 8px;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #000000;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background-color: #d0d0d0;
+}
+
+/* ---------------------------------------------------------------
+   CREATE SHIFT FORM - RESPONSIVE
+--------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .shift-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+/* Pushes the logout link to the far right of the nav bar */
+.manager-nav {
+    justify-content: flex-start;
+}
+
+.nav-logout {
+    margin-left: auto;
+    text-decoration: none;
+    color: #000000;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.nav-logout:hover {
+    text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------
+   AVAILABILITY MATRIX
+--------------------------------------------------------------- */
+
+/* Wrapper allows the table to scroll horizontally on small screens */
+.availability-table-wrapper {
+    overflow-x: auto;
+    margin-top: 8px;
+}
+
+/* Full width table with collapsed borders */
+.availability-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+/* All cells share the same padding and border */
+.availability-table th,
+.availability-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+/* Column headers - day name and date stacked vertically */
+.availability-table thead th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+}
+
+/* Day name and date sit on separate lines inside the header cell */
+.day-name {
+    display: block;
+    font-weight: 700;
+}
+
+.day-date {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    color: #555555;
+}
+
+/* Employee name column - left aligned and slightly wider */
+.name-col {
+    text-align: left !important;
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 160px;
+}
+
+/* Alternating row background for readability */
+.availability-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Available - green tint */
+.status-available {
+    color: #2e7d32;
+    background-color: #f0faf0;
+    font-weight: 500;
+}
+
+/* Unavailable - red tint */
+.status-unavailable {
+    color: #c62828;
+    background-color: #fff0f0;
+    font-weight: 500;
+}
+
+/* Holiday - amber tint */
+.status-holiday {
+    color: #e65100;
+    background-color: #fff8f0;
+    font-weight: 500;
+}
+
+/* Available - green circle check */
+.status-available {
+    background-color: #e8e8e8;
+}
+
+.status-available i {
+    font-size: 32px;
+    color: #2e9e3f;
+}
+
+/* Unavailable - red circle cross */
+.status-unavailable {
+    background-color: #e8e8e8;
+}
+
+.status-unavailable i {
+    font-size: 32px;
+    color: #d32f2f;
+}
+
+/* Holiday - blue plane */
+.status-holiday {
+    background-color: #e8e8e8;
+}
+
+.status-holiday i {
+    font-size: 28px;
+    color: #283593;
+}
+
+/* ---------------------------------------------------------------
+   STAFF MANAGEMENT TABLE
+--------------------------------------------------------------- */
+
+.staff-table-wrapper {
+    overflow-x: auto;
+    margin-top: 8px;
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.staff-table th,
+.staff-table td {
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+}
+
+.staff-table thead th {
+    background-color: #e8e8e8;
+    font-weight: 600;
+}
+
+.staff-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+/* Active / Inactive status badge */
+.status-badge {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-badge.active {
+    color: #2e7d32;
+}
+
+.status-badge.inactive {
+    color: #c62828;
+}
+
+/* Trash and edit icons sit side by side */
+.actions-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    border: none;
+}
+
+.action-icon {
+    color: #000000;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.action-icon:hover {
+    color: #555555;
 }

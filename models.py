@@ -3,20 +3,18 @@
 from extensions import db
 from flask_login import UserMixin
 
-# UserMixin adds the four methods Flask-Login needs on every user model
 class User(db.Model, UserMixin):
 
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), nullable=False, unique=True)
-    password_hash = db.Column(db.String(255), nullable=False) # never stores plain text
+    password_hash = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
-    access_level = db.Column(db.Integer, default=0) # 0 = employee, 1 = manager
+    access_level = db.Column(db.Integer, default=0) # 0 = employee, 1 = manager, -1 = inactive
     max_hours = db.Column(db.Integer)
 
-    # One user can have many shifts and many availability entries
     shifts = db.relationship('Shift', backref='user', lazy=True)
     availability = db.relationship('Availability', backref='user', lazy=True)
 
@@ -39,5 +37,5 @@ class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date = db.Column(db.Date, nullable=False)
-    status = db.Column(db.String(20), nullable=False) # "unavailable" or "On Holiday"
+    status = db.Column(db.String(20), nullable=False) # "Unavailable" or "Holiday"
     note = db.Column(db.Text, nullable=True)

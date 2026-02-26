@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Shifts - Shift Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page-container">
+
+        <nav class="manager-nav">
+            <a href="{{ url_for('manager.manager_dashboard') }}" class="{% if request.endpoint == 'manager.manager_dashboard' %}active{% endif %}">Upcoming Shifts</a>
+            <span>|</span>
+            <a href="{{ url_for('manager.employee_availability') }}" class="{% if request.endpoint == 'manager.employee_availability' %}active{% endif %}">Employee Availability</a>
+            <span>|</span>
+            <a href="{{ url_for('manager.staff_management') }}" class="{% if request.endpoint == 'manager.staff_management' %}active{% endif %}">Staff Management</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
+        </nav>
+
+        <h1>Welcome back, {{ current_user.first_name }}!</h1>
+
+        <!-- Week navigation -->
+        <div class="week-nav">
+            <a href="{{ url_for('manager.manager_dashboard', week_offset=week_offset - 1) }}" class="week-nav-side">Last Week</a>
+            <h2>{{ monday.strftime('%B %d') }} - {{ sunday.strftime('%B %d, %Y') }}</h2>
+            <a href="{{ url_for('manager.manager_dashboard', week_offset=week_offset + 1) }}" class="week-nav-side">Next Week</a>
+        </div>
+
+        <!-- Flash messages -->
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+
+        <!-- One card per unique time window -->
+        {% if shifts_by_window %}
+            {% for (start, end), shifts in shifts_by_window.items() %}
+                <div class="shift-card">
+
+                    <div class="shift-card-header">
+                        <div class="shift-card-info">
+                            <h3>{{ start.strftime('%A %d %B') }}</h3>
+                            <p>Start Time: {{ start.strftime('%I:%M %p') }}</p>
+                            <p>End Time: {{ end.strftime('%I:%M %p') }}</p>
+                            {% if shifts[0].description %}
+                                <p class="shift-description">{{ shifts[0].description }}</p>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('manager.edit_shift', start=start.isoformat()) }}" class="edit-icon">✏</a>
+                    </div>
+
+                    <div class="shift-employees">
+                        <p class="assigned-label">Assigned Employees</p>
+                        <div class="employee-tags">
+                            <!-- Loop through all shifts in this window - each shift = one assigned user -->
+                            {% for shift in shifts %}
+                                {% set status = availability_map.get((shift.user_id, start.date())) %}
+                                <span class="employee-tag">
+                                    {{ shift.user.first_name }} {{ shift.user.last_name }}
+                                    {% if status in ['Unavailable', 'Holiday'] %}
+                                        ❌
+                                    {% else %}
+                                        ✅
+                                    {% endif %}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-shifts">No shifts scheduled for this week.</p>
+        {% endif %}
+
+        <a href="{{ url_for('manager.create_shift') }}" class="btn-primary">Add New Shift</a>
+
+    </div>
+
+</body>
+</html>

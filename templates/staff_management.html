@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Management - Shift Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page-container">
+
+        <nav class="manager-nav">
+            <a href="{{ url_for('manager.manager_dashboard') }}" class="{% if request.endpoint == 'manager.manager_dashboard' %}active{% endif %}">Upcoming Shifts</a>
+            <span>|</span>
+            <a href="{{ url_for('manager.employee_availability') }}" class="{% if request.endpoint == 'manager.employee_availability' %}active{% endif %}">Employee Availability</a>
+            <span>|</span>
+            <a href="{{ url_for('manager.staff_management') }}" class="{% if request.endpoint == 'manager.staff_management' %}active{% endif %}">Staff Management</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
+        </nav>
+
+        <h1>Staff Management</h1>
+
+        <!-- Flash messages -->
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+
+        <div class="staff-table-wrapper">
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email Address</th>
+                        <th>Max Hours</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in staff %}
+                        <tr>
+                            <td>{{ employee.first_name }}</td>
+                            <td>{{ employee.last_name }}</td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.max_hours }}</td>
+                            <td>
+                                {% if employee.access_level == 0 %}
+                                    <span class="status-badge active">Active</span>
+                                {% else %}
+                                    <span class="status-badge inactive">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td class="actions-col">
+                                <!-- Delete — sets access_level to -1 -->
+                                <a href="{{ url_for('manager.deactivate_user', user_id=employee.id) }}" class="action-icon">
+                                    <i class="fa-solid fa-trash"></i>
+                                </a>
+                                <!-- Edit — opens edit employee page -->
+                                <a href="{{ url_for('manager.edit_employee', user_id=employee.id) }}" class="action-icon">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

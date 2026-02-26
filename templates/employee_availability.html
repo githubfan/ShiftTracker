@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Availability - Shift Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="page-container">
+
+        <nav class="manager-nav">
+            <a href="{{ url_for('manager.manager_dashboard') }}" class="{% if request.endpoint == 'manager.manager_dashboard' %}active{% endif %}">Upcoming Shifts</a>
+            <span>|</span>
+            <a href="{{ url_for('manager.employee_availability') }}" class="{% if request.endpoint == 'manager.employee_availability' %}active{% endif %}">Employee Availability</a>
+            <span>|</span>
+            <a href="{{ url_for('manager.staff_management') }}" class="{% if request.endpoint == 'manager.staff_management' %}active{% endif %}">Staff Management</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
+        </nav>
+
+        <h1>Employee Availability</h1>
+
+        <!-- Week navigation -->
+        <div class="week-nav">
+            <a href="{{ url_for('manager.employee_availability', week_offset=week_offset - 1) }}" class="week-nav-side">Last Week</a>
+            <h2>{{ monday.strftime('%B %d') }} - {{ week_dates[-1].strftime('%B %d, %Y') }}</h2>
+            <a href="{{ url_for('manager.employee_availability', week_offset=week_offset + 1) }}" class="week-nav-side">Next Week</a>
+        </div>
+
+
+        <!-- Availability matrix table -->
+        <div class="availability-table-wrapper">
+            <table class="availability-table">
+                <thead>
+                    <tr>
+                        <!-- Empty top-left cell above the employee name column -->
+                        <th class="name-col"></th>
+                        <!-- One column header per day of the week -->
+                        {% for day in week_dates %}
+                            <th>
+                                <span class="day-name">{{ day.strftime('%a') }}</span>
+                                <span class="day-date">{{ day.strftime('%d %b') }}</span>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <!-- Employee name in the first column -->
+                            <td class="name-col">{{ employee.first_name }} {{ employee.last_name }}</td>
+                            <!-- One cell per day - look up status in availability_map -->
+                            {% for day in week_dates %}
+                                {% set status = availability_map.get((employee.id, day)) %}
+                                {% if status == 'Unavailable' %}
+                                    <td class="status-unavailable"><i class="fa-solid fa-circle-xmark"></i></td>
+                                {% elif status == 'Holiday' %}
+                                    <td class="status-holiday"><i class="fa-solid fa-plane-departure"></i></td>
+                                {% else %}
+                                    <td class="status-available"><i class="fa-solid fa-circle-check"></i></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

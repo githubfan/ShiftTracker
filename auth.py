@@ -30,7 +30,7 @@ def register():
         else:
             max_hours = form.max_hours.data
 
-        # Hash the password — never store plain text
+        # Hash the password - never store plain text
         hashed_password = generate_password_hash(form.password.data)
 
         new_user = User(
@@ -65,11 +65,16 @@ def login():
             flash('Invalid email or password.', 'error')
             return render_template('login.html', form=form)
 
+        # Block inactive users from logging in
+        if user.access_level == -1:
+            flash('This account has been deactivated. Please contact your manager.', 'error')
+            return render_template('login.html', form=form)
+
         login_user(user)
 
         # Redirect to the correct dashboard based on access level
         if user.access_level == 1:
-            return redirect(url_for('main.manager_dashboard'))
+            return redirect(url_for('manager.manager_dashboard'))
         else:
             return redirect(url_for('main.employee_dashboard'))
 

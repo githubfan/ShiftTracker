@@ -10,6 +10,7 @@ from flask_login import LoginManager, current_user
 from extensions import db
 from models import User, Shift, Availability
 from auth import auth as auth_blueprint
+from manager import manager as manager_blueprint
 
 app = Flask(__name__)
 
@@ -25,12 +26,13 @@ login_manager.login_view = 'auth.login'
 # Reconstructs the current user from the session cookie on every request
 @login_manager.user_loader
 def load_user(user_id):
-    from models import User
     return User.query.get(int(user_id))
-
 
 # Plugs the auth Blueprint into the app so Flask knows about its routes
 app.register_blueprint(auth_blueprint)
+
+# Plugs the manager Blueprint into the app so Flask knows about its routes
+app.register_blueprint(manager_blueprint)
 
 with app.app_context():
     db.create_all()
@@ -40,7 +42,7 @@ with app.app_context():
 def index():
     if current_user.is_authenticated:
         if current_user.access_level == 1:
-            return redirect(url_for('main.manager_dashboard'))
+            return redirect(url_for('manager.manager_dashboard'))
         else:
             return redirect(url_for('main.employee_dashboard'))
     return redirect(url_for('auth.login'))
