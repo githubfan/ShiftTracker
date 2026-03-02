@@ -73,10 +73,14 @@ def login():
         login_user(user)
 
         # Redirect to the correct dashboard based on access level
-        if user.access_level == 1:
+        if user.access_level == 0:
+            return redirect(url_for('employee.my_shifts'))
+        elif user.access_level == 1:
             return redirect(url_for('manager.manager_dashboard'))
         else:
-            return redirect(url_for('main.employee_dashboard'))
+            # Inactive user — log them out and send them back to login
+            flash('Your account is inactive. Please contact your manager.', 'error')
+            return redirect(url_for('auth.login'))
 
     return render_template('login.html', form=form)
 

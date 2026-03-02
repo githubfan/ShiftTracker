@@ -25,8 +25,7 @@ def manager_required():
 def manager_dashboard():
     # Block non-managers from accessing this route
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     # Week navigation - week_offset of 0 = this week, -1 = last week, 1 = next week
     week_offset = request.args.get('week_offset', 0, type=int)
 
@@ -79,8 +78,7 @@ def manager_dashboard():
 @login_required
 def create_shift():
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     form = CreateShiftForm()
 
     # Populate the assigned_users checklist with only active employees
@@ -198,8 +196,7 @@ def create_shift():
 @login_required
 def employee_availability():
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     week_offset = request.args.get('week_offset', 0, type=int)
 
     today = date.today()
@@ -243,8 +240,7 @@ def employee_availability():
 @login_required
 def staff_management():
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     # Only show employees — exclude managers and the current user
     staff = User.query.filter(
         User.access_level != 1,
@@ -262,8 +258,7 @@ def staff_management():
 @login_required
 def deactivate_user(user_id):
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     user = User.query.get_or_404(user_id)
 
     # Extra safety check — prevent deactivating a manager
@@ -285,8 +280,7 @@ def deactivate_user(user_id):
 @login_required
 def edit_employee(user_id):
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     employee = User.query.get_or_404(user_id)
 
     # Extra safety check — prevent editing a manager
@@ -325,8 +319,7 @@ def edit_employee(user_id):
 @login_required
 def edit_shift():
     if manager_required():
-        return redirect(url_for('main.employee_dashboard'))
-
+        return redirect(url_for('auth.login'))
     # Read the start_time of the shift window from the URL parameter
     # e.g. /manager/edit-shift?start=2026-02-23T09:00:00
     start_str = request.args.get('start')

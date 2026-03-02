@@ -11,6 +11,7 @@ from extensions import db
 from models import User, Shift, Availability
 from auth import auth as auth_blueprint
 from manager import manager as manager_blueprint
+from employee import employee as employee_blueprint
 
 app = Flask(__name__)
 
@@ -34,6 +35,9 @@ app.register_blueprint(auth_blueprint)
 # Plugs the manager Blueprint into the app so Flask knows about its routes
 app.register_blueprint(manager_blueprint)
 
+# Plugs the employee Blueprint into the app so Flask knows about its routes
+app.register_blueprint(employee_blueprint)
+
 with app.app_context():
     db.create_all()
 
@@ -44,7 +48,7 @@ def index():
         if current_user.access_level == 1:
             return redirect(url_for('manager.manager_dashboard'))
         else:
-            return redirect(url_for('main.employee_dashboard'))
+            return redirect(url_for('employee.my_shifts'))
     return redirect(url_for('auth.login'))
 
 if __name__ == '__main__':

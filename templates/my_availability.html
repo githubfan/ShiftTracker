@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Availability - Shift Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page-container">
+
+        <nav class="employee-nav">
+            <a href="{{ url_for('employee.my_shifts') }}" class="{% if request.endpoint == 'employee.my_shifts' %}active{% endif %}">My Shifts</a>
+            <span>|</span>
+            <a href="{{ url_for('employee.my_availability') }}" class="{% if request.endpoint == 'employee.my_availability' %}active{% endif %}">My Availability</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
+        </nav>
+
+        <!-- -------------------------------------------------------
+             DESKTOP CALENDAR VIEW
+             Hidden on mobile, shown on desktop using CSS
+        -------------------------------------------------------- -->
+        <div class="desktop-only">
+
+            <h1>My Availability</h1>
+
+             <!-- Flash messages -->
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+
+            <!-- Month navigation -->
+            <div class="week-nav">
+                <a href="{{ url_for('employee.my_availability', month_offset=month_offset - 1) }}" class="week-nav-side">Last Month</a>
+                <h2>{{ month_name }}</h2>
+                <a href="{{ url_for('employee.my_availability', month_offset=month_offset + 1) }}" class="week-nav-side">Next Month</a>
+            </div>
+
+            <div class="calendar-grid">
+
+                <!-- Day name headers -->
+                <div class="calendar-header">Mon</div>
+                <div class="calendar-header">Tue</div>
+                <div class="calendar-header">Wed</div>
+                <div class="calendar-header">Thu</div>
+                <div class="calendar-header">Fri</div>
+                <div class="calendar-header">Sat</div>
+                <div class="calendar-header">Sun</div>
+
+                {% for week in month_weeks %}
+                    {% for day in week %}
+
+                        {% if day == 0 %}
+                            <!-- Day is 0 — outside the current month -->
+                            <div class="calendar-cell empty"></div>
+
+                        {% else %}
+                            <!-- Get the availability status for this day -->
+                            {% set status = availability_by_day[day] %}
+
+                            <div class="calendar-cell">
+
+                                <!-- Day number in the top left -->
+                                <span class="calendar-day-number">{{ day }}</span>
+
+                                <!-- Availability icon based on status -->
+                                {% if status == 'Holiday' %}
+                                    <div class="availability-icon-wrap">
+                                        <i class="fa-solid fa-plane-departure availability-holiday"></i>
+                                        {% for record in availability_records if record.date.day == day %}
+                                            <a href="{{ url_for('employee.delete_absence', record_id=record.id) }}" class="calendar-delete-icon">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                {% elif status == 'Unavailable' %}
+                                    <div class="availability-icon-wrap">
+                                        <i class="fa-solid fa-circle-xmark availability-unavailable"></i>
+                                        {% for record in availability_records if record.date.day == day %}
+                                            <a href="{{ url_for('employee.delete_absence', record_id=record.id) }}" class="calendar-delete-icon">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <!-- Available — green check, no delete button needed -->
+                                    <i class="fa-solid fa-circle-check availability-available"></i>
+                                {% endif %}
+
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+                {% endfor %}
+
+            </div>
+
+            <!-- Add New Absence button sits below the calendar -->
+            <div class="calendar-actions">
+                <a href="{{ url_for('employee.submit_absence') }}" class="btn-secondary">Add New Absence</a>
+            </div>
+
+        </div>
+
+        <!-- -------------------------------------------------------
+             MOBILE LIST VIEW
+             Hidden on desktop, shown on mobile using CSS
+        -------------------------------------------------------- -->
+        <div class="mobile-only">
+
+            <h1>Upcoming Absences</h1>
+
+            {% if upcoming_absences %}
+                <div class="absence-list">
+                    {% for absence in upcoming_absences %}
+                        <div class="absence-card">
+
+                            <!-- Icon on the left -->
+                            {% if absence.status == 'Holiday' %}
+                                <i class="fa-solid fa-plane-departure absence-icon absence-holiday"></i>
+                            {% else %}
+                                <i class="fa-solid fa-circle-xmark absence-icon absence-unavailable"></i>
+                            {% endif %}
+
+                            <!-- Date in the middle -->
+                            <p class="absence-date">{{ absence.date.strftime('%A %d %B') }}</p>
+
+                            <!-- Trash icon on the right -->
+                            <a href="{{ url_for('employee.delete_absence', record_id=absence.id) }}" class="absence-delete">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-data">You have no upcoming absences.</p>
+            {% endif %}
+
+            <!-- Add New Absence button sits below the list -->
+            <a href="{{ url_for('employee.submit_absence') }}" class="btn-secondary absence-btn">Add New Absence</a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

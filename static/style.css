@@ -620,3 +620,338 @@ textarea:focus {
 .action-icon:hover {
     color: #555555;
 }
+
+/* ---------------------------------------------------------------
+   EMPLOYEE NAV
+--------------------------------------------------------------- */
+
+.employee-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    font-size: 14px;
+}
+
+.employee-nav a {
+    text-decoration: none;
+    color: #000000;
+    font-weight: 500;
+}
+
+.employee-nav a.active {
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.employee-nav a:hover {
+    text-decoration: underline;
+}
+
+.employee-nav span {
+    color: #999999;
+}
+
+/* ---------------------------------------------------------------
+   DESKTOP CALENDAR GRID
+--------------------------------------------------------------- */
+
+/* 7 equal columns — one per day of the week */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Day name header cells */
+.calendar-header {
+    background-color: #e8e8e8;
+    font-weight: 700;
+    font-size: 14px;
+    text-align: center;
+    padding: 12px 0;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.calendar-header:last-child {
+    border-right: none;
+}
+
+/* Each day cell */
+.calendar-cell {
+    background-color: #d4d4d4;
+    min-height: 100px;
+    padding: 8px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Day number in the top left corner — position absolute so it doesn't affect centering */
+.calendar-day-number {
+    font-size: 13px;
+    font-weight: 600;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+/* Small trash icon — pinned to top right of the cell */
+.calendar-delete-icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    color: #888888;
+    font-size: 11px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.calendar-delete-icon:hover {
+    color: #d32f2f;
+}
+
+.calendar-shift-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+/* Wrap just needs to centre the availability icon now */
+.availability-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------------------------------------------------------------
+   MOBILE AGENDA LIST
+--------------------------------------------------------------- */
+
+.agenda-card {
+    background-color: #e8e8e8;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.agenda-date {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.agenda-time {
+    font-size: 14px;
+    color: #555555;
+}
+
+/* ---------------------------------------------------------------
+   RESPONSIVE — SWITCH BETWEEN CALENDAR AND AGENDA
+--------------------------------------------------------------- */
+
+/* On mobile — hide the calendar, show the agenda list */
+@media (max-width: 768px) {
+    .calendar-grid {
+        display: none;
+    }
+
+    .agenda-list {
+        display: block;
+    }
+
+    .week-nav h2 {
+        font-size: 20px;
+    }
+}
+
+/* On desktop — hide the agenda list, show the calendar */
+@media (min-width: 769px) {
+    .agenda-list {
+        display: none;
+    }
+
+    .calendar-grid {
+        display: grid;
+    }
+}
+
+/* ---------------------------------------------------------------
+   AVAILABILITY CALENDAR ICONS
+--------------------------------------------------------------- */
+
+.availability-available {
+    font-size: 28px;
+    color: #2e9e3f;
+}
+
+.availability-unavailable {
+    font-size: 28px;
+    color: #d32f2f;
+}
+
+.availability-holiday {
+    font-size: 24px;
+    color: #283593;
+}
+
+/* Wraps the availability icon and the trash icon together */
+.availability-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Small trash icon inside calendar cells */
+.calendar-delete-icon {
+    color: #888888;
+    font-size: 11px;
+    text-decoration: none;
+}
+
+.calendar-delete-icon:hover {
+    color: #d32f2f;
+}
+
+/* Add New Absence button below the calendar */
+.calendar-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ---------------------------------------------------------------
+   MOBILE ABSENCE LIST
+--------------------------------------------------------------- */
+
+.absence-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+/* Each absence card — icon, date, trash icon in a row */
+.absence-card {
+    background-color: #e8e8e8;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.absence-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.absence-holiday {
+    color: #283593;
+}
+
+.absence-unavailable {
+    color: #d32f2f;
+}
+
+.absence-date {
+    font-size: 15px;
+    font-weight: 600;
+    flex: 1;
+}
+
+.absence-delete {
+    color: #888888;
+    font-size: 16px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.absence-delete:hover {
+    color: #d32f2f;
+}
+
+/* Add New Absence button below the mobile list */
+.absence-btn {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* ---------------------------------------------------------------
+   RESPONSIVE — SHOW/HIDE DESKTOP AND MOBILE SECTIONS
+--------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none;
+    }
+
+    .desktop-only {
+        display: block;
+    }
+}
+
+/* ---------------------------------------------------------------
+   SUBMIT ABSENCE FORM
+--------------------------------------------------------------- */
+
+/* Date From and Date To sit side by side on desktop */
+.absence-date-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* Radio buttons stacked vertically matching the wireframe */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    width: fit-content;
+}
+
+.radio-label label {
+    cursor: pointer;
+}
+
+/* Stack date fields vertically on mobile */
+@media (max-width: 768px) {
+    .absence-date-row {
+        grid-template-columns: 1fr;
+    }
+}

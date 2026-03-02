@@ -3,7 +3,7 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, IntegerField, SubmitField, TextAreaField, SelectMultipleField, widgets
-from wtforms.fields import DateField, SelectField, TimeField
+from wtforms.fields import DateField, SelectField, TimeField, RadioField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, Optional, NumberRange
 
 class RegistrationForm(FlaskForm):
@@ -47,3 +47,26 @@ class EditEmployeeForm(FlaskForm):
         (-1, 'Inactive')
     ], coerce=int)
     submit = SubmitField('Save Changes')
+
+class SubmitAbsenceForm(FlaskForm):
+
+    # Date range pickers — employee selects a start and end date
+    date_from = DateField('Date From', validators=[DataRequired()])
+    date_to = DateField('Date To', validators=[DataRequired()])
+
+    # Optional note about the absence
+    description = TextAreaField('Description (Optional)', validators=[Optional()])
+
+    # Absence type — rendered as radio buttons in the template
+    # Holiday = planned time off, Unavailable = can't work that day
+    absence_type = RadioField(
+        'Type of Absence',
+        choices=[
+            ('Holiday', 'Holiday'),
+            ('Unavailable', 'Unavailable')
+        ],
+        default='Holiday',
+        validators=[DataRequired()]
+    )
+
+    submit = SubmitField('Create Absence')

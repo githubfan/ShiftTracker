@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Absence — Shift Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page-container">
+
+        <nav class="employee-nav">
+            <a href="{{ url_for('employee.my_shifts') }}" class="{% if request.endpoint == 'employee.my_shifts' %}active{% endif %}">My Shifts</a>
+            <span>|</span>
+            <a href="{{ url_for('employee.my_availability') }}" class="{% if request.endpoint == 'employee.my_availability' %}active{% endif %}">My Availability</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
+        </nav>
+
+        <h1>Create Absence</h1>
+
+        <!-- Flash messages -->
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <!-- Date From and Date To sit side by side on desktop, stacked on mobile -->
+            <div class="absence-date-row">
+
+                <div class="form-group">
+                    <label>Date From <span class="required">*</span></label>
+                    {{ form.date_from(class='form-input') }}
+                    {% for error in form.date_from.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label>Date To <span class="required">*</span></label>
+                    {{ form.date_to(class='form-input') }}
+                    {% for error in form.date_to.errors %}
+                        <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label>Description (Optional)</label>
+                {{ form.description(class='form-input form-textarea') }}
+                {% for error in form.description.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Type of Absence radio buttons -->
+            <div class="form-group">
+                <label>Type of Absence <span class="required">*</span></label>
+                <div class="radio-group">
+                    {% for subfield in form.absence_type %}
+                        <div class="radio-label">
+                            {{ subfield() }}
+                            <label for="{{ subfield.id }}">{{ subfield.label.text }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% for error in form.absence_type.errors %}
+                    <span class="field-error">{{ error }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Cancel and Submit buttons -->
+            <div class="form-actions">
+                <a href="{{ url_for('employee.my_availability') }}" class="btn-secondary">Cancel</a>
+                {{ form.submit(class='btn-secondary') }}
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

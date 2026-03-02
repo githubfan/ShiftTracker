@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Shifts - Shift Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="page-container">
+
+        <nav class="employee-nav">
+            <a href="{{ url_for('employee.my_shifts') }}" class="{% if request.endpoint == 'employee.my_shifts' %}active{% endif %}">My Shifts</a>
+            <span>|</span>
+            <a href="{{ url_for('employee.my_availability') }}" class="{% if request.endpoint == 'employee.my_availability' %}active{% endif %}">My Availability</a>
+            <a href="{{ url_for('auth.logout') }}" class="nav-logout">Logout</a>
+        </nav>
+
+        <h1>Upcoming Shifts</h1>
+
+        <!-- Month navigation -->
+        <div class="week-nav">
+            <a href="{{ url_for('employee.my_shifts', month_offset=month_offset - 1) }}" class="week-nav-side">Last Month</a>
+            <h2>{{ month_name }}</h2>
+            <a href="{{ url_for('employee.my_shifts', month_offset=month_offset + 1) }}" class="week-nav-side">Next Month</a>
+        </div>
+
+        <!-- -------------------------------------------------------
+             DESKTOP CALENDAR VIEW
+             Hidden on mobile, shown on desktop using CSS
+        -------------------------------------------------------- -->
+        <div class="calendar-grid">
+
+            <!-- Day name headers — Mon through Sun -->
+            <div class="calendar-header">Mon</div>
+            <div class="calendar-header">Tue</div>
+            <div class="calendar-header">Wed</div>
+            <div class="calendar-header">Thu</div>
+            <div class="calendar-header">Fri</div>
+            <div class="calendar-header">Sat</div>
+            <div class="calendar-header">Sun</div>
+
+            <!-- Iterate through each week returned by calendar.monthcalendar -->
+            {% for week in month_weeks %}
+                {% for day in week %}
+
+                    {% if day == 0 %}
+                        <!-- Day is 0 — this cell is outside the current month -->
+                        <div class="calendar-cell empty"></div>
+
+                    {% else %}
+                        <!-- Check if this day is today for highlighting -->
+                        {% if day == today.day and target_month == today.month and target_year == today.year %}
+                            <div class="calendar-cell today">
+                        {% else %}
+                            <div class="calendar-cell">
+                        {% endif %}
+
+                            <!-- Day number in the top left of the cell -->
+                            <span class="calendar-day-number">{{ day }}</span>
+
+                            <!-- Render any shifts on this day -->
+                            {% for shift in shifts_by_day[day] %}
+                                <div class="calendar-shift-card">
+                                    {{ shift.start_time.strftime('%H:%M') }} - {{ shift.end_time.strftime('%H:%M') }}
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+            {% endfor %}
+
+        </div>
+
+        <!-- -------------------------------------------------------
+             MOBILE AGENDA VIEW
+             Hidden on desktop, shown on mobile using CSS
+        -------------------------------------------------------- -->
+        <div class="agenda-list">
+
+            {% set has_shifts = [] %}
+
+            {% for day, shifts in shifts_by_day.items() %}
+                {% if shifts %}
+                    {% set _ = has_shifts.append(1) %}
+                    {% for shift in shifts %}
+                        <div class="agenda-card">
+                            <p class="agenda-date">{{ shift.start_time.strftime('%A %d %B') }}</p>
+                            <p class="agenda-time">{{ shift.start_time.strftime('%H:%M') }} - {{ shift.end_time.strftime('%H:%M') }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+
+            {% if not has_shifts %}
+                <p class="no-data">You have no shifts this month.</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>
