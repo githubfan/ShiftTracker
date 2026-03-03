@@ -7,12 +7,15 @@
 # LoginManager: tracks which user is currently logged in
 from flask import Flask, redirect, url_for
 from flask_login import LoginManager, current_user
-from extensions import db
+from extensions import db, mail
 from models import User, Shift, Availability
 from auth import auth as auth_blueprint
 from manager import manager as manager_blueprint
 from employee import employee as employee_blueprint
+from dotenv import load_dotenv
+import os
 
+load_dotenv()  # Load environment variables from .env file
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'my-temporary-secret-key'
@@ -37,6 +40,31 @@ app.register_blueprint(manager_blueprint)
 
 # Plugs the employee Blueprint into the app so Flask knows about its routes
 app.register_blueprint(employee_blueprint)
+
+# ---------------------------------------------------------------
+# FLASK-MAIL CONFIGURATION
+# Gmail SMTP server settings
+# Credentials are read from environment variables so they are
+# never hardcoded into the source code
+# ---------------------------------------------------------------
+
+# The Gmail SMTP server address
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+
+# Port 587 is the standard port for TLS encrypted SMTP
+app.config['MAIL_PORT'] = 587
+
+# TLS (Transport Layer Security) encrypts the connection to Gmail
+app.config['MAIL_USE_TLS'] = True
+
+# Read the Gmail address and app password from environment variables
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+
+# The name and address that will appear in the From field of the email
+app.config['MAIL_DEFAULT_SENDER'] = ('Shift Tracker', os.environ.get('MAIL_USERNAME'))
+
+mail.init_app(app)
 
 with app.app_context():
     db.create_all()

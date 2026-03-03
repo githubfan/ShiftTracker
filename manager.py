@@ -7,6 +7,7 @@ from extensions import db
 from models import User, Shift, Availability
 from forms import CreateShiftForm, EditEmployeeForm
 from datetime import datetime, timedelta, date
+from email_helper import send_shift_notification
 
 manager = Blueprint('manager', __name__)
 
@@ -113,6 +114,9 @@ def create_shift():
         shift_sunday = shift_monday + timedelta(days=6)
 
         error_list = []
+
+        # Changed from a list of name strings to a list of User objects
+        # so we can access user.email after the commit for sending emails
         success_list = []
 
         # ---------------------------------------------------------------
@@ -172,14 +176,28 @@ def create_shift():
                 description=form.description.data
             )
             db.session.add(new_shift)
-            success_list.append(f'{user.first_name} {user.last_name}')
+
+            # Append the full User object so we can email them after the commit
+            success_list.append(user)
 
         # Commit all successful shifts in one database call
         db.session.commit()
 
-        # Flash success and error messages
+        # ---------------------------------------------------------------
+        # EMAIL NOTIFICATIONS
+        # ---------------------------------------------------------------
+        for user in success_list:
+            email_sent = send_shift_notification(user, shift_start, shift_end)
+
+            if email_sent:
+                flash(f'Shift notification email sent to {user.first_name} {user.last_name}.', 'success')
+            else:
+                flash(f'Shift saved but email notification failed for {user.first_name} {user.last_name}.', 'error')
+
+        # Flash messages — build name strings from the User objects
         if success_list:
-            flash(f'Shift created successfully for: {", ".join(success_list)}.', 'success')
+            names = ', '.join([f'{u.first_name} {u.last_name}' for u in success_list])
+            flash(f'Shift created successfully for: {names}.', 'success')
         for error in error_list:
             flash(error, 'error')
 
